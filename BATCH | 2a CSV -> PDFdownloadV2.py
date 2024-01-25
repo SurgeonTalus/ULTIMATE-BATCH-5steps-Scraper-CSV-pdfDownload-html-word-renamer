@@ -2,8 +2,9 @@ import tkinter as tk
 from tkinter import filedialog
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin, unquote  # Import unquote
 import os
+
 
 def is_pdf(url):
     # Check if the URL ends with '.pdf'
@@ -35,11 +36,14 @@ def process_csv_file(file_path, download_path):
             if not link or not link.startswith('http'):
                 continue
 
+            # Decode URL if needed
+            decoded_link = unquote(link)
+
             # Skip links that are not PDFs
-            if not is_pdf(link):
+            if not is_pdf(decoded_link):
                 continue
 
-            success, message = download_pdf(link, download_path)
+            success, message = download_pdf(decoded_link, download_path)
             print(message)
 
 def browse_file():
